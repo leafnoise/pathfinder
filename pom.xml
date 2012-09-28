@@ -78,6 +78,12 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>5.3.1.Final</version>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- End of Project dependencies -->
 		
 		<!-- Import the CDI API, we use provided scope as the API is included in 
@@ -124,6 +130,24 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- JSR-303 (Bean Validation) Implementation -->
+		<!-- Provides portable constraints such as @Email -->
+		<!-- Hibernate Validator is shipped in JBoss AS 7 -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Now we declare any tools needed -->
+		<!-- Needed for running tests (you may also use TestNG) -->
 		<!-- junit -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -247,7 +271,7 @@
 			<version>${resteasy.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- HornetQ -->
 		<dependency>
 			<groupId>org.hornetq</groupId>
@@ -289,7 +313,7 @@
 			<version>3.7.ga</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<resources>
 			<resource>
@@ -297,7 +321,8 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
+		<!-- Maven will append the version to the finalName (which is the name 
+			given to the generated war, and hence the context root) -->
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
@@ -331,9 +356,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
-
 	<repositories>
 		<repository>
 			<id>jboss-public-repository</id>
@@ -352,5 +374,4 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
-
 </project>

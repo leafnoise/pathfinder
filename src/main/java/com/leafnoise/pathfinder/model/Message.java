@@ -2,7 +2,6 @@ package com.leafnoise.pathfinder.model;
 
 import java.util.Date;
 
-
 public class Message {
 
 	private Long id;
@@ -10,9 +9,8 @@ public class Message {
 	private Date receivedDate;
 	
 	private String origin;
-	
-	private String payload;
 		
+	private String payload;
 	
 	public Long getId() {
 		return id;
