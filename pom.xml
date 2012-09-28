@@ -14,29 +14,21 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<weld.version>1.1.8.Final</weld.version>
 		<javaee6.web.spec.version>2.0.0.Final</javaee6.web.spec.version>
-		
+
 		<seam.version>3.1.0.Final</seam.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<resteasy.version>2.3.2.Final</resteasy.version>
 		<hornetq.version>2.2.10.Final</hornetq.version>
-		
-  </properties>
-    
+
+	</properties>
+
 
 
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill -->
-			<!-- of Materials (BOM). A BOM specifies the versions of a "stack" (or 
-				a collection) -->
-			<!-- of artifacts. We use this here so that we always get the correct 
-				versions -->
-			<!-- of artifacts. Here we use the jboss-javaee-web-6.0 stack (you can 
-				read this -->
-			<!-- as the JBoss stack of the Java EE Web Profile 6 APIs) -->
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-web-6.0</artifactId>
@@ -46,56 +38,39 @@
 
 			</dependency>
 
-			<!-- <dependency> -->
-			<!-- <groupId>org.jboss.seam</groupId> -->
-			<!-- <artifactId>seam-bom</artifactId> -->
-			<!-- <version>${seam.version}</version> -->
-			<!-- <type>pom</type> -->
-			<!-- <scope>import</scope> -->
-			<!-- </dependency> -->
+
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
 
-	<!-- Project Dependencies -->
-		
-		
+		<!-- Project Dependencies -->
 		<dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core</artifactId>
-            <version>${weld.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.solder</groupId>
-            <artifactId>solder-api</artifactId>
-            <version>${seam.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.solder</groupId>
-            <artifactId>solder-impl</artifactId>
-            <version>${seam.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-         <dependency>
-            <groupId>com.ocpsoft</groupId>
-            <artifactId>prettyfaces-jsf2</artifactId>
-            <version>3.3.2</version>
-        </dependency>
-<!--         <dependency> -->
-<!-- 			<groupId>javax.faces</groupId> -->
-<!-- 			<artifactId>jsf-api</artifactId> -->
-<!-- 			<version>2.1</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-core</artifactId>
+			<version>${weld.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.solder</groupId>
+			<artifactId>solder-api</artifactId>
+			<version>${seam.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.solder</groupId>
+			<artifactId>solder-impl</artifactId>
+			<version>${seam.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ocpsoft</groupId>
+			<artifactId>prettyfaces-jsf2</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
@@ -116,7 +91,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.3</version>
 		</dependency>
-            
+
 
 		<dependency>
 			<groupId>org.drools</groupId>
@@ -125,9 +100,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- End of Project dependencies -->
-		<!-- First declare the APIs we depend on and need for compilation. All 
-			of them are provided by JBoss AS 7 -->
-
+		
 		<!-- Import the CDI API, we use provided scope as the API is included in 
 			JBoss AS 7 -->
 		<dependency>
@@ -136,14 +109,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
-			as the API is included in JBoss AS 7 -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.jboss.spec.javax.annotation</groupId> -->
-		<!-- <artifactId>jboss-annotations-api_1.1_spec</artifactId> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
-
+		
 		<!-- Import the JAX-RS API, we use provided scope as the API is included 
 			in JBoss AS 7 -->
 		<dependency>
@@ -197,21 +163,8 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Now we declare any tools needed -->
-
-		<!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
-			typesafe criteria queries -->
-
-
-
-		<!-- <dependency> -->
-		<!-- <groupId>org.hibernate</groupId> -->
-		<!-- <artifactId>hibernate-jpamodelgen</artifactId> -->
-		<!-- <version>1.1.1.Final</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
-
-		<!-- Needed for running tests (you may also use TestNG) -->
+		
+		<!-- junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -219,9 +172,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Optional, but highly recommended -->
-		<!-- Arquillian allows you to test enterprise code such as EJBs and Transactional(JTA) 
-			JPA from JUnit/TestNG -->
+		<!-- Arquillian  -->
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
@@ -259,22 +210,7 @@
 			<version>${seam.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-         <groupId>org.jboss.solder</groupId>
-         <artifactId>solder-impl</artifactId>
-      </dependency>
-		<dependency>
-			<groupId>org.jboss.solder</groupId>
-			<artifactId>solder-api</artifactId>
-			<version>${seam.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.solder</groupId>
-			<artifactId>solder-impl</artifactId>
-			<version>${seam.version}</version>
-			<scope>runtime</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.jboss.seam.persistence</groupId>
 			<artifactId>seam-persistence-api</artifactId>
@@ -301,24 +237,10 @@
 			<scope>runtime</scope>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.richfaces.ui</groupId>
-			<artifactId>richfaces-components-ui</artifactId>
-			<version>4.0.0.Final</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.richfaces.core</groupId>
-			<artifactId>richfaces-core-impl</artifactId>
-			<version>4.0.0.Final</version>
-			<scope>runtime</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>3.3</version>
+			<version>3.4.1</version>
 		</dependency>
 
 		<dependency>
@@ -327,10 +249,10 @@
 			<version>2.0</version>
 		</dependency>
 
-		<dependency>		
-		     <groupId>org.drools</groupId>		
-		     <artifactId>drools-compiler</artifactId>		
-		     <version>5.3.1.Final</version>		
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>5.3.1.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.drools</groupId>
@@ -357,11 +279,9 @@
 			<artifactId>jasperreports</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-		
-		
-		<!-- ################################ -->
-		<!-- ########### RESTEASY ########### -->
-		<!-- ################################ -->
+
+
+		<!-- RESTEASY -->
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
@@ -386,66 +306,62 @@
 			<version>${resteasy.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
-		
-		
+
+
+
 		<!-- HornetQ -->
 		<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-core</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-core-client</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-jboss-as-integration</artifactId>
-				<version>${hornetq.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-bootstrap</artifactId>
-				<version>${hornetq.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-resources</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
-		
-		
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core-client</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jboss-as-integration</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-bootstrap</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-resources</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>javassist</artifactId>
 			<scope>compile</scope>
 			<version>3.7.ga</version>
 		</dependency>
-		
+
 	</dependencies>
 
 
 
 	<build>
-	
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		
-		<!-- Maven will append the version to the finalName (which is the name 
-			given to the generated war, and hence the context root) -->
+
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
-			<!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation 
-				processors -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.1</version>
@@ -468,13 +384,9 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
 				<configuration>
-					<!-- Java EE 6 doesn't require web.xml, Maven needs to catch up! -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- The JBoss AS plugin deploys your war to a local JBoss AS container -->
-			<!-- To use, set the JBOSS_HOME environment variable and run: mvn package 
-				jboss-as:deploy -->
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
 				<artifactId>jboss-as-maven-plugin</artifactId>
@@ -484,30 +396,25 @@
 		</plugins>
 	</build>
 
-	
-	
+
+
 	<repositories>
-				<!-- The JBoss Community public repository is a composite repository 
-					of several major repositories -->
-				<!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-				<repository>
-					<id>jboss-public-repository</id>
-					<name>JBoss Repository</name>
-					<url>http://repository.jboss.org/nexus/content/groups/public</url>
-					<!-- These optional flags are designed to speed up your builds by reducing 
-						remote server calls -->
-					<releases>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>prime-repo</id>
-					<name>PrimeFaces Maven Repository</name>
-					<url>http://repository.primefaces.org</url>
-					<layout>default</layout>
-				</repository>
+		<repository>
+			<id>jboss-public-repository</id>
+			<name>JBoss Repository</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<releases>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>prime-repo</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
 	</repositories>
 
 </project>
