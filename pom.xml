@@ -22,9 +22,6 @@
 		<hornetq.version>2.2.21.Final</hornetq.version>
   </properties>
     
-
-
-
 	<dependencyManagement>
 		<dependencies>
 			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill -->
@@ -43,22 +40,12 @@
 				<scope>import</scope>
 
 			</dependency>
-
-			<!-- <dependency> -->
-			<!-- <groupId>org.jboss.seam</groupId> -->
-			<!-- <artifactId>seam-bom</artifactId> -->
-			<!-- <version>${seam.version}</version> -->
-			<!-- <type>pom</type> -->
-			<!-- <scope>import</scope> -->
-			<!-- </dependency> -->
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
 
 	<!-- Project Dependencies -->
-		
-		
 		<dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
@@ -103,7 +90,6 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -114,8 +100,6 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.3</version>
 		</dependency>
-            
-
 		<dependency>
 			<groupId>org.drools</groupId>
 			<artifactId>drools-core</artifactId>
@@ -136,11 +120,11 @@
 
 		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
 			as the API is included in JBoss AS 7 -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.jboss.spec.javax.annotation</groupId> -->
-		<!-- <artifactId>jboss-annotations-api_1.1_spec</artifactId> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.annotation</groupId>
+			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- Import the JAX-RS API, we use provided scope as the API is included 
 			in JBoss AS 7 -->
@@ -149,7 +133,6 @@
 			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.spec.javax.el</groupId>
 			<artifactId>jboss-el-api_2.2_spec</artifactId>
@@ -178,7 +161,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-
 		<!-- JSR-303 (Bean Validation) Implementation -->
 		<!-- Provides portable constraints such as @Email -->
 		<!-- Hibernate Validator is shipped in JBoss AS 7 -->
@@ -197,18 +179,6 @@
 
 		<!-- Now we declare any tools needed -->
 
-		<!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
-			typesafe criteria queries -->
-
-
-
-		<!-- <dependency> -->
-		<!-- <groupId>org.hibernate</groupId> -->
-		<!-- <artifactId>hibernate-jpamodelgen</artifactId> -->
-		<!-- <version>1.1.1.Final</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
-
 		<!-- Needed for running tests (you may also use TestNG) -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -226,7 +196,6 @@
 			<version>1.0.0.CR4</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.arquillian.protocol</groupId>
 			<artifactId>arquillian-protocol-servlet</artifactId>
@@ -234,23 +203,19 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<!-- Librerias SEAM 3 -->
-
 		<dependency>
 			<groupId>org.jboss.seam.international</groupId>
 			<artifactId>seam-international-api</artifactId>
 			<version>${seam.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.international</groupId>
 			<artifactId>seam-international</artifactId>
 			<version>${seam.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.security</groupId>
 			<artifactId>seam-security</artifactId>
@@ -307,19 +272,16 @@
 			<version>4.0.0.Final</version>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
 			<version>3.4.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.0</version>
 		</dependency>
-
 		<dependency>		
 		     <groupId>org.drools</groupId>		
 		     <artifactId>drools-compiler</artifactId>		
@@ -337,24 +299,18 @@
 			<version>3.3.2</version>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-		
-		
-		<!-- ################################ -->
 		<!-- ########### RESTEASY ########### -->
-		<!-- ################################ -->
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
@@ -379,8 +335,6 @@
 			<version>${resteasy.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
-		
 		
 		<!-- HornetQ -->
 		<dependency>
@@ -411,28 +365,25 @@
 			<version>${hornetq.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.9.1</version>
+		</dependency>
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>javassist</artifactId>
 			<scope>compile</scope>
 			<version>3.7.ga</version>
 		</dependency>
-		
 	</dependencies>
-
-
-
 	<build>
-	
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		
 		<!-- Maven will append the version to the finalName (which is the name 
 			given to the generated war, and hence the context root) -->
 		<finalName>${project.artifactId}</finalName>
@@ -456,7 +407,6 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
@@ -473,12 +423,8 @@
 				<artifactId>jboss-as-maven-plugin</artifactId>
 				<version>7.1.0.Beta1b</version>
 			</plugin>
-
 		</plugins>
 	</build>
-
-	
-	
 	<repositories>
 				<!-- The JBoss Community public repository is a composite repository 
 					of several major repositories -->
@@ -502,5 +448,4 @@
 					<layout>default</layout>
 				</repository>
 	</repositories>
-
 </project>
