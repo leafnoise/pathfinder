@@ -14,14 +14,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<weld.version>1.1.8.Final</weld.version>
 		<javaee6.web.spec.version>2.0.0.Final</javaee6.web.spec.version>
-		
 		<seam.version>3.1.0.Final</seam.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<resteasy.version>2.3.2.Final</resteasy.version>
-		<hornetq.version>2.2.10.Final</hornetq.version>
-		
+		<hornetq.version>2.2.21.Final</hornetq.version>
   </properties>
     
 
@@ -280,28 +278,23 @@
 			<artifactId>seam-persistence-api</artifactId>
 			<version>${seam.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.persistence</groupId>
 			<artifactId>seam-persistence</artifactId>
 			<version>${seam.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.faces</groupId>
 			<artifactId>seam-faces-api</artifactId>
 			<version>${seam.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.seam.faces</groupId>
 			<artifactId>seam-faces</artifactId>
 			<version>${seam.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-ui</artifactId>
@@ -318,7 +311,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>3.3</version>
+			<version>3.4.1</version>
 		</dependency>
 
 		<dependency>
@@ -391,33 +384,33 @@
 		
 		<!-- HornetQ -->
 		<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-core</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-core-client</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-jboss-as-integration</artifactId>
-				<version>${hornetq.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-bootstrap</artifactId>
-				<version>${hornetq.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hornetq</groupId>
-				<artifactId>hornetq-resources</artifactId>
-				<version>${hornetq.version}</version>
-				<scope>provided</scope>
-			</dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core-client</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jboss-as-integration</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-bootstrap</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-resources</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		
 		<dependency>

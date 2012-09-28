@@ -5,13 +5,12 @@
         http://java.sun.com/xml/ns/persistence
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
-	<persistence-unit name="pathfinderPU" transaction-type="JTA">
-		<jta-data-source>java:jboss/datasources/MonitorDS</jta-data-source>
+	<persistence-unit name="pathfinderPU">
+		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.show_sql" value="false" />
 		</properties>
 	</persistence-unit>
+
 </persistence>
