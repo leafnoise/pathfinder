@@ -17,7 +17,7 @@ import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
  * @author Jorge Morando
  *
  */
-@Path("/stats/")
+@Path("/")
 public interface MessageWS {
 	
 	/**
