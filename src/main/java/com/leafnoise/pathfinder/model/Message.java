@@ -1,10 +1,12 @@
 package com.leafnoise.pathfinder.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Message {
 
-	private Long id;
+	private String id;
 	
 	private Date receivedDate;
 	
@@ -12,11 +14,11 @@ public class Message {
 		
 	private String payload;
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -43,10 +45,12 @@ public class Message {
 	public void setPayload(String payload) {
 		this.payload = payload;
 	}
-
 	
-	
-	
-	
-
+	public Map<String,String> toMap(){
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("receivedDate", receivedDate.toString());
+		map.put("origin", origin);
+		map.put("payload", payload);
+		return map;
+	}
 }

@@ -4,9 +4,7 @@ import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import com.leafnoise.pathfinder.service.impl.MessageServiceImpl;
 import com.leafnoise.pathfinder.ws.api.MessageWS;
 import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
 

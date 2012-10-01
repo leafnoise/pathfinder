@@ -9,17 +9,13 @@
     template="templates/template.xhtml">
 
     <ui:define name="body">
-		
-		
-		
-	 
 		<p:panel
 			style="width:755px;background-color:#B7B0B0;"
 			rendered="true">
 			<h1><h:outputText value="Hello world!" /></h1>
 			<p><h:outputText value="welcome to pathfinder project!!" /></p>
+			<h:commandLink action="#{mainBB.doSth()}" value="TEST" />
 		</p:panel>
-		
     </ui:define>
 </ui:composition>
 
