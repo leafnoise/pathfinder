@@ -17,18 +17,12 @@
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <servlet>
-    <servlet-name>health</servlet-name>
-    <jsp-file>/health.jsp</jsp-file>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>health</servlet-name>
-    <url-pattern>/health</url-pattern>
-  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.jsf</url-pattern>
   </servlet-mapping>
+  
   
   <context-param>
     <param-name>com.ocpsoft.pretty.BASE_PACKAGES</param-name>
