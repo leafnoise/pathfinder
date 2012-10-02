@@ -1,10 +1,9 @@
 package com.leafnoise.pathfinder.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.leafnoise.pathfinder.vo.MessageHeader;
+import com.mongodb.DBObject;
 
 /**
  * @author Jorge Morando
@@ -12,10 +11,16 @@ import com.leafnoise.pathfinder.vo.MessageHeader;
  */
 public class PFMessage implements Serializable {
 
-	private static final long serialVersionUID = -6143073557369810450L;
+	private static final long serialVersionUID = -7921027587494879013L;
 	private String _id;
 	private MessageHeader header;
 	private String payload;
+	
+	public PFMessage(String id, DBObject message){
+		_id = id;
+		header = new MessageHeader((DBObject) message.get("header"));
+		payload = message.get("payload").toString();
+	}
 	
 	public PFMessage(MessageHeader header, String payload){
 		this.header = header;
@@ -52,13 +57,6 @@ public class PFMessage implements Serializable {
 		this._id = _id;
 	}
 
-	public Map<String,String> toMap(){
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("header", header.getSource());
-		map.put("payload", payload);
-		return map;
-	}
-	
 	public String toJsonStr(){
 		StringBuilder jsonStr = new StringBuilder();
 		jsonStr.append("{");

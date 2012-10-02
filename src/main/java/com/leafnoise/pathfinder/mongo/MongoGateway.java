@@ -2,7 +2,9 @@ package com.leafnoise.pathfinder.mongo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -17,8 +19,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
 import com.mongodb.util.JSONParseException;
@@ -130,6 +132,10 @@ public class MongoGateway {
 		return hasError;
 	}
 	
+	private DBObject getDBO(Object obj){
+		return (DBObject) obj;
+	}
+	
 	private void processWriteResult(WriteResult wr){
 		lastErrorMsg = wr.getError();
 		hasError = !(lastErrorMsg == null);
@@ -204,19 +210,38 @@ public class MongoGateway {
 	 * @return List&lt;PFMessage&gt;
 	 */
 	public List<PFMessage> findAll(){
-		List<PFMessage> msgs = null;
-		DBCursor cursor = getColl().find();
-        try {
-            while(cursor.hasNext()) {
-                System.out.println(cursor.next());
-            }
-        }catch(MongoException e){
-        	log.error(e);
-        	throw new TechnicalException(e);
-        }finally {
-            cursor.close();
-        }
+		return find(null);
+	}
+	
+	/**
+	 * Find messages according to filter object specifications
+	 * @return List&lt;PFMessage&gt;
+	 */
+	public List<PFMessage> find(Map<String,Object> query){
+		List<PFMessage> msgs = new ArrayList<PFMessage>();
+		DBCursor cursor = null;
+		if(query==null){//find all
+			 cursor = getColl().find();
+		}else{//find with filters
+			cursor = getColl().find(new BasicDBObject(query));
+		}
+		if(cursor!=null){
+			try {
+				while(cursor.hasNext()) {
+					DBObject obj = cursor.next();
+					DBObject message = getDBO(obj.get("message"));
+					PFMessage msg = new PFMessage(obj.get("_id").toString(),message);
+					msgs.add(msg);
+				}
+			}catch(Exception e){
+				log.error(e);
+				throw new TechnicalException(e);
+			}finally {
+				cursor.close();
+			}
+		}
         
 		return msgs;
 	}
+	
 }

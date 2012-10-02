@@ -1,10 +1,13 @@
 package com.leafnoise.pathfinder.vo;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import com.mongodb.DBObject;
 
 /**
  * @author Jorge Morando
@@ -12,17 +15,27 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class MessageHeader implements  Serializable {
 
-	private static final long serialVersionUID = 1319180990417704039L;
 	
+	private static final long serialVersionUID = 1780901948775215069L;
 	private String from;
 	private String type;
 	@JsonIgnore
 	private Date received;
 	@JsonIgnore
-	private String source;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public MessageHeader(){
 		this.received = new Date();
+	}
+
+	public MessageHeader(DBObject header){
+		try {
+			received = sdf.parse((String) header.get("received"));
+		} catch (ParseException e) {
+			received = null;
+		} 
+		from = (String) header.get("from");
+		type = (String) header.get("type");
 	}
 	
 	/**
@@ -62,18 +75,6 @@ public class MessageHeader implements  Serializable {
 	public void setReceived(Date received) {
 		this.received = received;
 	}
-	/**
-	 * @return the source
-	 */
-	public String getSource() {
-		return source;
-	}
-	/**
-	 * @param source the source to set
-	 */
-	public void setSource(String source) {
-		this.source = source;
-	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -101,13 +102,9 @@ public class MessageHeader implements  Serializable {
 			jsonStr.append("\""+type+"\"");
 			jsonStr.append(",");
 		}
-		jsonStr.append("\"source\"");
-		jsonStr.append(":");
-		jsonStr.append("\""+source+"\"");
-		jsonStr.append(",");
 		jsonStr.append("\"received\"");
 		jsonStr.append(":");
-		jsonStr.append("\""+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").toString()+"\"");
+		jsonStr.append("\""+sdf.format(received)+"\"");
 		jsonStr.append("}");
 		return jsonStr.toString();
 	}

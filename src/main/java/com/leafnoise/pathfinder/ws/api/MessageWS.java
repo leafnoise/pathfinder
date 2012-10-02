@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
+import com.leafnoise.pathfinder.ws.artifacts.WSResponse;
 
 /**
  * @author Jorge Morando
@@ -33,7 +33,7 @@ public interface MessageWS {
 	@Path("/send")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	MessageWSResponse send(String rawMessage, @Context HttpServletRequest request);
+	WSResponse send(String rawMessage, @Context HttpServletRequest request);
 	
 	/**
 	 * REST Interface Service that retrieves a list of persisted messages from all senders
@@ -44,7 +44,7 @@ public interface MessageWS {
 	@GET
 	@Path("/receive")
 	@Produces(MediaType.APPLICATION_JSON)
-	MessageWSResponse receive(@Context HttpServletRequest request);
+	WSResponse receive(@Context HttpServletRequest request);
 	
 	/**
 	 * REST Interface Service that retrieves a list of persisted messages from its sender
@@ -55,7 +55,7 @@ public interface MessageWS {
 	@GET
 	@Path("/receive/from/{sender}")
 	@Produces(MediaType.APPLICATION_JSON)
-	MessageWSResponse receive(@PathParam("sender") String from,@Context HttpServletRequest request);
+	WSResponse receive(@PathParam("sender") String from,@Context HttpServletRequest request);
 	
 	/**
 	 * REST Interface Service that retrieves a list of persisted messages from its sender and its type
@@ -67,6 +67,6 @@ public interface MessageWS {
 	@GET
 	@Path("/receive/from/{sender}/{type}")
 	@Produces(MediaType.APPLICATION_JSON)
-	MessageWSResponse receive(@PathParam("sender") String from,@PathParam("type") String type, @Context HttpServletRequest request);
+	WSResponse receive(@PathParam("sender") String from,@PathParam("type") String type, @Context HttpServletRequest request);
 
 }

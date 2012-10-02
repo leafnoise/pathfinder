@@ -1,6 +1,7 @@
 package com.leafnoise.pathfinder.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.leafnoise.pathfinder.exceptions.BusinessException;
 import com.leafnoise.pathfinder.model.PFMessage;
@@ -24,5 +25,11 @@ public interface MessageService {
 	 * @return List&lt;Message&gt;
 	 */
 	List<PFMessage> getAll();
+	
+	/**
+	 * Retrieves messages according to specified filters
+	 * @return List&lt;Message&gt;
+	 */
+	List<PFMessage> get(Map<String,Object> filters);
 	
 }

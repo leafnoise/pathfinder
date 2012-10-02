@@ -1,40 +1,29 @@
 package com.leafnoise.pathfinder.ws.artifacts;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.leafnoise.pathfinder.model.PFMessage;
 
 /**
- * Generic MessageWSResponse. Conversion to JSON will be marshalled by JacksonJSON Library
+ *  MessageWSResponse. Conversion to JSON will be marshalled by JacksonJSON Library
  * @author Jorge Morando
  */
-public class MessageWSResponse implements Serializable{
+public class MessageWSResponse extends WSResponse implements Serializable{
 
-	private static final long serialVersionUID = -2845618712511648250L;
-
-	private String message;
-	private Boolean success;
+	private static final long serialVersionUID = -7801570664066705117L;
+	private List<PFMessage> messages;
 	
 	/**
-	 * @return the success
+	 * @return the messages
 	 */
-	public Boolean getSuccess() {
-		return success;
+	public List<PFMessage> getMessages() {
+		return messages;
 	}
 	/**
-	 * @param success the success to set
+	 * @param messages the messages to set
 	 */
-	public void setSuccess(Boolean success) {
-		this.success = success;
-	}
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
-	/**
-	 * @param message the message to set
-	 */
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMessages(List<PFMessage> messages) {
+		this.messages = messages;
 	}
 }

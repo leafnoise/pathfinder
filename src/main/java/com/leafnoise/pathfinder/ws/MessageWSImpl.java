@@ -1,7 +1,9 @@
 package com.leafnoise.pathfinder.ws;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,11 +14,13 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.leafnoise.pathfinder.exceptions.BusinessException;
+import com.leafnoise.pathfinder.exceptions.TechnicalException;
 import com.leafnoise.pathfinder.model.PFMessage;
 import com.leafnoise.pathfinder.service.MessageService;
 import com.leafnoise.pathfinder.vo.MessageHeader;
 import com.leafnoise.pathfinder.ws.api.MessageWS;
 import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
+import com.leafnoise.pathfinder.ws.artifacts.WSResponse;
 
 
 
@@ -25,7 +29,6 @@ import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
  *
  */
 public class MessageWSImpl implements MessageWS {
-	
 	
 	@Inject
 	Logger log;
@@ -37,9 +40,9 @@ public class MessageWSImpl implements MessageWS {
 	/* (non-Javadoc)
 	 * @see JGMWS#send(JGMRawMessage, HttpServletRequest)
 	 */
-	public MessageWSResponse send(String rawMessage, HttpServletRequest request) {
+	public WSResponse send(String rawMessage, HttpServletRequest request) {
 		PFMessage msg = null;
-		MessageWSResponse response = new MessageWSResponse();
+		WSResponse response = new WSResponse();
 		ObjectMapper jsonMapper = new ObjectMapper();
 		try {
 			//JSON TreeNode managing
@@ -53,7 +56,6 @@ public class MessageWSImpl implements MessageWS {
 			
 			//Parse header node to header java object
 			MessageHeader header = jsonMapper.readValue(headerNode, MessageHeader.class);
-			header.setSource(headerNode.toString());
 			
 			String payload = payloadNode.toString();
 			
@@ -78,35 +80,54 @@ public class MessageWSImpl implements MessageWS {
 	}
 
 	@Override
-	public MessageWSResponse receive( HttpServletRequest request) {
-		return receive(null,null,request);
+	public WSResponse receive(HttpServletRequest request) {
+		return receive(null,request);
 	}
 	
 	@Override
-	public MessageWSResponse receive(String from, HttpServletRequest request) {
+	public WSResponse receive(String from, HttpServletRequest request) {
 		return receive(from,null,request);
 	}
 	
 	@Override
-	public MessageWSResponse receive(String from, String type, HttpServletRequest request) {
-		if(from==null) log.info("from = null");
-		if(type==null) log.info("type = null");
-		
-		MessageWSResponse response = new MessageWSResponse();
+	public WSResponse receive(String from, String type, HttpServletRequest request) {
+		Map<String,Object> filters = new HashMap<String,Object>();
+		if(from!=null){
+			log.info("Adding \"from\"="+from+" filter to query");
+			filters.put("message.header.from",from);
+		}
+		if(type!=null){
+			log.info("Adding \"type\"="+type+" filter to query");
+			filters.put("message.header.type",type);
+		}
 		
 		List<PFMessage> msgs = null;
 		
 		try {
-			msgs = mms.getAll();
-		} catch (Exception e) {
-			// TODO: handle exception
+			if(filters==null || filters.size()==0)
+				msgs = mms.getAll();
+			else
+				msgs = mms.get(filters);
+		} catch (TechnicalException e) {
+			String msg = "Error trying to retrieve all messages";
+			log.error(msg,e);
+			WSResponse response = new WSResponse();
+			response.setMessage(msg +": "+e.getMessage());
+			response.setSuccess(false);
+			return response;
 		}
 		
-		if(msgs == null){
+		if(msgs == null || msgs.size()==0){
+			WSResponse response = new WSResponse();
 			response.setMessage("No messages found");
+			response.setSuccess(true);
+			return response;
+		}else{
+			MessageWSResponse response = new MessageWSResponse();
+			response.setMessages(msgs);
+			response.setMessage("Found "+msgs.size()+" Messages Total");
+			response.setSuccess(true);
+			return response;
 		}
-		
-		response.setSuccess(true);
-		return response;
 	}
 }

@@ -1,6 +1,7 @@
 package com.leafnoise.pathfinder.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -44,7 +45,17 @@ public class MessageServiceMongo implements MessageService {
 	@Override
 	public List<PFMessage> getAll() {
 		List<PFMessage> msgs = null;
-		msgs = gateway.findAll();
+		msgs = get(null);
+		return msgs;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.leafnoise.pathfinder.service.MessageService#get()
+	 */
+	@Override
+	public List<PFMessage> get(Map<String,Object> filter) {
+		List<PFMessage> msgs = null;
+		msgs = gateway.find(filter);
 		return msgs;
 	}
 
