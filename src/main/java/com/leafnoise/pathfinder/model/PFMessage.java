@@ -59,17 +59,17 @@ public class PFMessage implements Serializable {
 		return map;
 	}
 	
-	public String toJson(){
+	public String toJsonStr(){
 		StringBuilder jsonStr = new StringBuilder();
 		jsonStr.append("{");
 		jsonStr.append("\"header\"");
 		jsonStr.append(":");
-		jsonStr.append(header.getSource());
+		jsonStr.append(header.toJsonStr());
+		jsonStr.append(",");
 		jsonStr.append("\"payload\"");
 		jsonStr.append(":");
 		jsonStr.append(payload);
 		jsonStr.append("}");
 		return jsonStr.toString();
-				
 	}
 }

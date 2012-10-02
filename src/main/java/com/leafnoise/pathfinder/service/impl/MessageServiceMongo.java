@@ -33,7 +33,7 @@ public class MessageServiceMongo implements MessageService {
 	 */
 	@Override
 	public void save(PFMessage message) throws BusinessException{
-		gateway.persist(message.toMap());
+		gateway.persist(message.toJsonStr());
 		if(gateway.hasError())
 			throw new BusinessException(gateway.getLastErrorMsg());
 	}
@@ -43,7 +43,9 @@ public class MessageServiceMongo implements MessageService {
 	 */
 	@Override
 	public List<PFMessage> getAll() {
-		return null;
+		List<PFMessage> msgs = null;
+		msgs = gateway.findAll();
+		return msgs;
 	}
 
 	@Override

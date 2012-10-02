@@ -1,6 +1,7 @@
 package com.leafnoise.pathfinder.ws;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,7 +27,8 @@ import com.leafnoise.pathfinder.ws.artifacts.MessageWSResponse;
 public class MessageWSImpl implements MessageWS {
 	
 	
-	private static final Logger log = Logger.getLogger(MessageWS.class);
+	@Inject
+	Logger log;
 	
 	@Inject
 	@Named("mongoMessageService")
@@ -46,6 +48,8 @@ public class MessageWSImpl implements MessageWS {
 			//Header and Payload Nodes
 			JsonNode headerNode = rootNode.path("header");
 			JsonNode payloadNode = rootNode.path("payload");
+			
+			
 			
 			//Parse header node to header java object
 			MessageHeader header = jsonMapper.readValue(headerNode, MessageHeader.class);
@@ -70,6 +74,39 @@ public class MessageWSImpl implements MessageWS {
 			response.setMessage("El mensaje no se pudo enviar: "+e.getMessage());
 			response.setSuccess(false);
 		}
+		return response;
+	}
+
+	@Override
+	public MessageWSResponse receive( HttpServletRequest request) {
+		return receive(null,null,request);
+	}
+	
+	@Override
+	public MessageWSResponse receive(String from, HttpServletRequest request) {
+		return receive(from,null,request);
+	}
+	
+	@Override
+	public MessageWSResponse receive(String from, String type, HttpServletRequest request) {
+		if(from==null) log.info("from = null");
+		if(type==null) log.info("type = null");
+		
+		MessageWSResponse response = new MessageWSResponse();
+		
+		List<PFMessage> msgs = null;
+		
+		try {
+			msgs = mms.getAll();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		if(msgs == null){
+			response.setMessage("No messages found");
+		}
+		
+		response.setSuccess(true);
 		return response;
 	}
 }

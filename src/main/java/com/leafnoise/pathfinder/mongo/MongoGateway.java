@@ -2,20 +2,23 @@ package com.leafnoise.pathfinder.mongo;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.jboss.solder.core.Veto;
 
 import com.leafnoise.pathfinder.exceptions.TechnicalException;
+import com.leafnoise.pathfinder.model.PFMessage;
 import com.leafnoise.pathfinder.mongo.exceptions.MissingMongoConfigFileException;
 import com.leafnoise.pathfinder.mongo.exceptions.MongoMissingCollectionException;
 import com.leafnoise.pathfinder.mongo.exceptions.MongoMissingConnectionException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
+import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
 import com.mongodb.util.JSONParseException;
@@ -159,6 +162,7 @@ public class MongoGateway {
 		}else{
 			db = m.getDB(dbStr);
 		}
+		log.debug("Using "+db.getName()+" DB");
 		return this;
 	}
 	
@@ -170,6 +174,7 @@ public class MongoGateway {
 	public MongoGateway useCollection(String col){
 		if(col == null) return this;
 		collection = getDB().getCollection(col);
+		log.debug("Using "+collection.getName()+" Collection");
 		return this;
 	}
 	
@@ -178,13 +183,13 @@ public class MongoGateway {
 	 * @param jsonMap the mapped valid JSON
 	 * @return the current instance of the MongoGateway
 	 */
-	public MongoGateway persist(Map<String,String> jsonMap){
+	public MongoGateway persist(String message){
 		reset();
-		BasicDBObject dbo = new BasicDBObject(jsonMap);
-		Object payload;
+		BasicDBObject dbo = new BasicDBObject();
+		Object msg;
 		try {
-			payload = JSON.parse(jsonMap.get("payload"));
-			dbo.put("payload",payload);
+			msg = JSON.parse(message);
+			dbo.put("message",msg);
 			WriteResult wr = getColl().insert(dbo);
 			processWriteResult(wr);
 		} catch (JSONParseException e) {
@@ -192,5 +197,26 @@ public class MongoGateway {
 			hasError = true;
 		}
 		return this;
+	}
+	
+	/**
+	 * Find all messages
+	 * @return List&lt;PFMessage&gt;
+	 */
+	public List<PFMessage> findAll(){
+		List<PFMessage> msgs = null;
+		DBCursor cursor = getColl().find();
+        try {
+            while(cursor.hasNext()) {
+                System.out.println(cursor.next());
+            }
+        }catch(MongoException e){
+        	log.error(e);
+        	throw new TechnicalException(e);
+        }finally {
+            cursor.close();
+        }
+        
+		return msgs;
 	}
 }

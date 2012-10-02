@@ -1,6 +1,7 @@
 package com.leafnoise.pathfinder.vo;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -85,6 +86,30 @@ public class MessageHeader implements  Serializable {
 				+ ((type == null) ? 0 : type.hashCode())
 				+ ((received == null) ? 0 : received.hashCode());
 		return result;
+	}
+	
+	public String toJsonStr(){
+		StringBuilder jsonStr = new StringBuilder();
+		jsonStr.append("{");
+		jsonStr.append("\"from\"");
+		jsonStr.append(":");
+		jsonStr.append("\""+from+"\"");
+		jsonStr.append(",");
+		if(type!=null){
+			jsonStr.append("\"type\"");
+			jsonStr.append(":");
+			jsonStr.append("\""+type+"\"");
+			jsonStr.append(",");
+		}
+		jsonStr.append("\"source\"");
+		jsonStr.append(":");
+		jsonStr.append("\""+source+"\"");
+		jsonStr.append(",");
+		jsonStr.append("\"received\"");
+		jsonStr.append(":");
+		jsonStr.append("\""+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").toString()+"\"");
+		jsonStr.append("}");
+		return jsonStr.toString();
 	}
 }
 
