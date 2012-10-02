@@ -19,7 +19,7 @@
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<resteasy.version>2.3.2.Final</resteasy.version>
-		<hornetq.version>2.2.21.Final</hornetq.version>
+		<hornetq.version>2.2.11.Final</hornetq.version>
     </properties>
 	<dependencyManagement>
 		<dependencies>
@@ -116,8 +116,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		
-
 		<!-- Import the EJB API, we use provided scope as the API is included in 
 			JBoss AS 7 -->
 		<dependency>
@@ -173,11 +171,13 @@
 			<scope>provided</scope>
 			<version>${resteasy.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson-provider</artifactId>
 			<version>${resteasy.version}</version>
-			<scope>provided</scope>
+			<!-- jackson-mapper is not provided -->
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- Librerias SEAM 3 -->
@@ -221,8 +221,6 @@
 			<version>${seam.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		
-		
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
@@ -233,7 +231,6 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.0</version>
 		</dependency>
-
 		<dependency>		
 		     <groupId>org.drools</groupId>		
 		     <artifactId>drools-compiler</artifactId>		
@@ -265,13 +262,24 @@
 			<groupId>org.hornetq</groupId>
 			<artifactId>hornetq-core</artifactId>
 			<version>${hornetq.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hornetq</groupId>
-			<artifactId>hornetq-core-client</artifactId>
+			<artifactId>hornetq-ra</artifactId>
 			<version>${hornetq.version}</version>
-			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms-client</artifactId>
+			<version>${hornetq.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hornetq</groupId>
@@ -287,7 +295,7 @@
 			<groupId>org.hornetq</groupId>
 			<artifactId>hornetq-resources</artifactId>
 			<version>${hornetq.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>
@@ -299,6 +307,17 @@
 			<artifactId>javassist</artifactId>
 			<scope>compile</scope>
 			<version>3.7.ga</version>
+		</dependency>
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jbossall-client</artifactId>
+			<version>4.2.2.GA</version>
+		</dependency>
+		<dependency>
+             <groupId>org.jboss.ejb3</groupId>
+             <artifactId>jboss-ejb3-ext-api</artifactId>
+             <version>2.0.0</version>
+             <scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -348,14 +367,9 @@
 	
 	<repositories>
 		<repository>
-			<id>jboss-public-repository</id>
+			<id>jboss-releases-repository</id>
 			<name>JBoss Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			<releases>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
 		</repository>
 		<repository>
 			<id>prime-repo</id>

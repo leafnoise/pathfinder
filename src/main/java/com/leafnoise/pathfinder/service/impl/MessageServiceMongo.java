@@ -5,10 +5,15 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.leafnoise.pathfinder.model.Message;
+import com.leafnoise.pathfinder.annotations.DefaultMessageHandler;
+import com.leafnoise.pathfinder.exceptions.BusinessException;
+import com.leafnoise.pathfinder.exceptions.TechnicalException;
+import com.leafnoise.pathfinder.handlers.MessageHandler;
+import com.leafnoise.pathfinder.handlers.jms.annotations.JMS;
+import com.leafnoise.pathfinder.model.PFMessage;
 import com.leafnoise.pathfinder.mongo.MongoGateway;
-import com.leafnoise.pathfinder.mongo.annotations.MongoGatewaySingleton;
 import com.leafnoise.pathfinder.mongo.annotations.MongoGatewayConfig;
+import com.leafnoise.pathfinder.mongo.annotations.MongoGatewaySingleton;
 import com.leafnoise.pathfinder.service.MessageService;
 
 @Named("mongoMessageService")
@@ -19,21 +24,35 @@ public class MessageServiceMongo implements MessageService {
 	@MongoGatewayConfig(collection="messages")
 	private MongoGateway gateway;
 	
+	@Inject
+	@JMS @DefaultMessageHandler
+	private MessageHandler handler;
+	
 	/* (non-Javadoc)
 	 * @see com.leafnoise.pathfinder.service.MessageService#save(com.leafnoise.pathfinder.model.Message)
 	 */
 	@Override
-	public boolean save(Message message) {
+	public void save(PFMessage message) throws BusinessException{
 		gateway.persist(message.toMap());
-		return gateway.hasError();
+		if(gateway.hasError())
+			throw new BusinessException(gateway.getLastErrorMsg());
 	}
 
 	/* (non-Javadoc)
 	 * @see com.leafnoise.pathfinder.service.MessageService#getAll()
 	 */
 	@Override
-	public List<Message> getAll() {
+	public List<PFMessage> getAll() {
 		return null;
+	}
+
+	@Override
+	public void enqueue(PFMessage message) throws BusinessException {
+		try {
+			handler.enqueue(message);
+		} catch (Exception e) {
+			throw new TechnicalException(e);
+		}
 	}
 	
 }

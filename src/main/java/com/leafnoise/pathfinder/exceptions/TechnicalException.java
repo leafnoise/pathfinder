@@ -19,7 +19,5 @@ public class TechnicalException extends RuntimeException {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
-
-	
 	
 }

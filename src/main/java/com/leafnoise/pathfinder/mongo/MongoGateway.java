@@ -68,7 +68,7 @@ public class MongoGateway {
 		String host = null;
 		Integer port = null;
 		try {
-			log.debug("Retrieving mongoConf.properties");
+			log.info("Retrieving mongoConf.properties");
 			InputStream stream = this.getClass().getClassLoader().getResourceAsStream("mongoConf.properties");
 			config = new Properties();
 			try {
