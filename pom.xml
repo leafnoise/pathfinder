@@ -20,6 +20,7 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<resteasy.version>2.3.2.Final</resteasy.version>
 		<hornetq.version>2.2.11.Final</hornetq.version>
+		<primefaces.version>3.4.1</primefaces.version>
     </properties>
 	<dependencyManagement>
 		<dependencies>
@@ -224,7 +225,7 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>3.4.1</version>
+			<version>${primefaces.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -254,8 +255,6 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
-
-		
 
 		<!-- HornetQ -->
 		<dependency>

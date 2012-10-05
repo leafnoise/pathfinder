@@ -68,10 +68,18 @@ public class MongoGateway {
 	
 	private Boolean hasError = false;
 	
+	private boolean authenticate = false;
+
+	private boolean authenticated = false;
+	
+	private String[] credentials = new String[2];
+	
 	private MongoGateway(){
 		log.info("Creating MongoGateway Instance");
 		String host = null;
 		Integer port = null;
+		String user = null;
+		String pass = null;
 		try {
 			log.info("Retrieving mongoConf.properties");
 			InputStream stream = this.getClass().getClassLoader().getResourceAsStream("mongoConf.properties");
@@ -86,6 +94,15 @@ public class MongoGateway {
 			host = config.getProperty(PropertyKeys.HOST.getKey(),PropertyKeys.HOST.getDefault());
 			log.debug("Retrieving port value");
 			port = Integer.valueOf(config.getProperty(PropertyKeys.PORT.getKey(),PropertyKeys.PORT.getDefault()));
+			log.debug("Retrieving user value");
+			user = config.getProperty(PropertyKeys.USER.getKey(),PropertyKeys.USER.getDefault());
+			log.debug("Retrieving pass value");
+			pass = config.getProperty(PropertyKeys.PASS.getKey(),PropertyKeys.PASS.getDefault());
+			if(user!=null && pass!=null){
+				authenticate = true;
+				credentials[0] = user;
+				credentials[1] = pass;
+			}
 		} catch (MissingMongoConfigFileException e) {
 			log.warn("No MongoDB configuration file found, using default values",e);
 			host = PropertyKeys.HOST.getDefault();
@@ -167,6 +184,10 @@ public class MongoGateway {
 			useDefaultDB();
 		}else{
 			db = m.getDB(dbStr);
+		}
+		if(authenticate && !authenticated){
+			db.authenticate(credentials[0], credentials[1].toCharArray());
+			authenticated = true;
 		}
 		log.debug("Using "+db.getName()+" DB");
 		return this;

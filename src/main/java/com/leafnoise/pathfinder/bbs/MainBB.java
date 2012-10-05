@@ -1,4 +1,4 @@
-package com.leafnoise.pathfinder.controller;
+package com.leafnoise.pathfinder.bbs;
 
 import javax.inject.Inject;
 import javax.inject.Named;
