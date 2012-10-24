@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.jboss.solder.core.Veto;
 
 import com.leafnoise.pathfinder.exceptions.TechnicalException;
-import com.leafnoise.pathfinder.model.PFMessage;
+import com.leafnoise.pathfinder.model.BaseEvent;
 import com.leafnoise.pathfinder.mongo.exceptions.MissingMongoConfigFileException;
 import com.leafnoise.pathfinder.mongo.exceptions.MongoMissingCollectionException;
 import com.leafnoise.pathfinder.mongo.exceptions.MongoMissingConnectionException;
@@ -26,7 +26,17 @@ import com.mongodb.util.JSON;
 import com.mongodb.util.JSONParseException;
 
 /**
- * Singleton Class for MongoDB interaction.
+ * Singleton Class for MongoDB interaction.<br/>
+ * Is default values are loaded in the following order:
+ * <ol>
+ * <li><b>mongoConf.properties</b>: Compulsory configuration file available in the classpath. It should provide at the very least the host and port of the mondgodb location</li>
+ * <li><b>MongoGateway.class</b>: Holds every other information necesary for mongodb successful connection given the default mongodb configuration</li>
+ * <li><b>Injection Attribute Annotation</b>: Aditional configuration can be loaded via the annotation</li>
+ * </ol></br>
+ * This Pojo will NOT be loaded by solder at deploy time for injection due to @Veto annotation</br>
+ * 
+ * @see com.leafnoise.pathfinder.mongo.annotations.MongoGatewayConfig
+ * @see org.jboss.solder.core.Veto
  * @author Jorge Morando
  */
 @Veto
@@ -98,7 +108,7 @@ public class MongoGateway {
 			user = config.getProperty(PropertyKeys.USER.getKey(),PropertyKeys.USER.getDefault());
 			log.debug("Retrieving pass value");
 			pass = config.getProperty(PropertyKeys.PASS.getKey(),PropertyKeys.PASS.getDefault());
-			if(user!=null && pass!=null){
+			if((user!=null && pass!=null) && (!user.isEmpty() && !pass.isEmpty())){
 				authenticate = true;
 				credentials[0] = user;
 				credentials[1] = pass;
@@ -136,7 +146,7 @@ public class MongoGateway {
 		return db;
 	}
 	
-	private DBCollection getColl(){
+	private DBCollection getCollection(){
 		if(collection==null) throw new MongoMissingCollectionException("No collection selected", new NullPointerException("Null Collection attribute"));
 		return collection;
 	}
@@ -149,10 +159,6 @@ public class MongoGateway {
 		return hasError;
 	}
 	
-	private DBObject getDBO(Object obj){
-		return (DBObject) obj;
-	}
-	
 	private void processWriteResult(WriteResult wr){
 		lastErrorMsg = wr.getError();
 		hasError = !(lastErrorMsg == null);
@@ -161,6 +167,10 @@ public class MongoGateway {
 	private void reset(){
 		lastErrorMsg = null;
 		hasError = false;
+	}
+	
+	private DBObject getDBO(Object obj) {
+		return (DBObject) obj;
 	}
 	
 	/*------GATEWAY ACTION METHODS------*/
@@ -183,13 +193,18 @@ public class MongoGateway {
 		if(dbStr == null || dbStr.trim().isEmpty()){
 			useDefaultDB();
 		}else{
-			db = m.getDB(dbStr);
+			try {
+				db = m.getDB(dbStr);
+				if(authenticate && !authenticated){
+					db.authenticate(credentials[0], credentials[1].toCharArray());
+					authenticated = true;
+				}
+			} catch (Exception e) {
+				log.error(e);
+				throw new TechnicalException("Unable to use \""+dbStr+"\" DB.",e);
+			}
 		}
-		if(authenticate && !authenticated){
-			db.authenticate(credentials[0], credentials[1].toCharArray());
-			authenticated = true;
-		}
-		log.debug("Using "+db.getName()+" DB");
+		log.debug("Using DB: \""+db.getName()+"\"");
 		return this;
 	}
 	
@@ -201,23 +216,32 @@ public class MongoGateway {
 	public MongoGateway useCollection(String col){
 		if(col == null) return this;
 		collection = getDB().getCollection(col);
-		log.debug("Using "+collection.getName()+" Collection");
+		log.debug("Using collection: \""+collection.getName()+"\"");
 		return this;
 	}
 	
 	/**
-	 * Persists a Map&lt;String,Object&gt;
+	 * Persists a Map&lt;String,Object&gt; under a key of value &quot:message&quot;
 	 * @param jsonMap the mapped valid JSON
 	 * @return the current instance of the MongoGateway
 	 */
-	public MongoGateway persist(String message){
+	public MongoGateway persist(String event){
+		return persist("event",event);
+	}
+	
+	/**
+	 * Persists a Map&lt;String,Object&gt; under a given key
+	 * @param jsonMap the mapped valid JSON
+	 * @return the current instance of the MongoGateway
+	 */
+	public MongoGateway persist(String key, String message){
 		reset();
 		BasicDBObject dbo = new BasicDBObject();
 		Object msg;
 		try {
 			msg = JSON.parse(message);
-			dbo.put("message",msg);
-			WriteResult wr = getColl().insert(dbo);
+			dbo.put(key,msg);
+			WriteResult wr = getCollection().insert(dbo);
 			processWriteResult(wr);
 		} catch (JSONParseException e) {
 			lastErrorMsg = e.getMessage();
@@ -230,29 +254,31 @@ public class MongoGateway {
 	 * Find all messages
 	 * @return List&lt;PFMessage&gt;
 	 */
-	public List<PFMessage> findAll(){
+	public List<BaseEvent> findAll(){
 		return find(null);
 	}
 	
 	/**
-	 * Find messages according to filter object specifications
+	 * Find messages according to filter object specifications<br/>
+	 * If query map is null a generic find() will be executed.
+	 * @param query the Map&lt;String,Object&gt; with the filters for the specific search
 	 * @return List&lt;PFMessage&gt;
 	 */
-	public List<PFMessage> find(Map<String,Object> query){
-		List<PFMessage> msgs = new ArrayList<PFMessage>();
+	public List<BaseEvent> find(Map<String,Object> query){
+		List<BaseEvent> msgs = new ArrayList<BaseEvent>();
 		DBCursor cursor = null;
 		if(query==null){//find all
-			 cursor = getColl().find();
+			 cursor = getCollection().find();
 		}else{//find with filters
-			cursor = getColl().find(new BasicDBObject(query));
+			cursor = getCollection().find(new BasicDBObject(query));
 		}
 		if(cursor!=null){
 			try {
 				while(cursor.hasNext()) {
 					DBObject obj = cursor.next();
-					DBObject message = getDBO(obj.get("message"));
-					PFMessage msg = new PFMessage(obj.get("_id").toString(),message);
-					msgs.add(msg);
+					DBObject evtIns = getDBO(obj.get("event"));
+					BaseEvent evt = new BaseEvent(obj.get("_id").toString(),evtIns);
+					msgs.add(evt);
 				}
 			}catch(Exception e){
 				log.error(e);
@@ -261,7 +287,6 @@ public class MongoGateway {
 				cursor.close();
 			}
 		}
-        
 		return msgs;
 	}
 	

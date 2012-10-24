@@ -64,19 +64,17 @@ public class CDIBeanProducer {
 		log.debug("Retrieving Configuration gateway configuration");
 		MongoGatewayConfig config = ip.getAnnotated().getAnnotation(MongoGatewayConfig.class);
 		
+		MongoGateway mg = MongoGateway.getInstance();
 		try {
-			MongoGateway mg = MongoGateway.getInstance();
 			if(config==null){
 				log.debug("No annotated configuration found, using defaults");
 				mg =  mg.useDefaultDB();
 			} else {
 				mg = mg.useDB(config.database()).useCollection(config.collection());
 			}
-			
-			return mg;
 		} catch (TechnicalException e) {
-			log.error("MongoGateway CDI object production failed: "+e.getMessage());
-			return null;
+			log.error("MongoGateway CDI object production failed: "+e.getMessage(),e);
 		}
+		return mg;
 	}
 }

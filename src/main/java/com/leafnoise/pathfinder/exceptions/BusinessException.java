@@ -2,6 +2,10 @@ package com.leafnoise.pathfinder.exceptions;
 
 import javax.ejb.ApplicationException;
 
+/**
+ * Exception that rises when a fault in Business Logic is found
+ * @author Jorge Morando
+ */
 @SuppressWarnings("serial")
 @ApplicationException(rollback=false)
 public class BusinessException extends Exception {

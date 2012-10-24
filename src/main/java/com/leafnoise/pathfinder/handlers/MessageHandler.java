@@ -1,12 +1,18 @@
 package com.leafnoise.pathfinder.handlers;
 
-import com.leafnoise.pathfinder.model.PFMessage;
+
 
 /**
+ * Application Interface that handles the JMS message
  * @author Jorge Morando
  */
 public interface MessageHandler {
 
-	void enqueue(PFMessage message) throws Exception;
+	/**
+	 * 
+	 * @param message The String representation of the un-marshalled message to be enqueued as a TextMessage in HornetQ queue.
+	 * @throws Exception 
+	 */
+	void enqueue(String message) throws Exception;
 	
 }

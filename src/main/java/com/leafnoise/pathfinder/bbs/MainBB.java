@@ -3,13 +3,13 @@ package com.leafnoise.pathfinder.bbs;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.leafnoise.pathfinder.service.MessageService;
+import com.leafnoise.pathfinder.service.EventService;
 
 @Named("mainBB")
 public class MainBB {
 
 	@Inject 
-	@Named("mongoMessageService")
-	private MessageService mms;
+	@Named("mongoEventService")
+	private EventService es;
 	
 }

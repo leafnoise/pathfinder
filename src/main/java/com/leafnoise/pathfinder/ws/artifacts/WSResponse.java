@@ -3,7 +3,10 @@ package com.leafnoise.pathfinder.ws.artifacts;
 import java.io.Serializable;
 
 /**
- * Generic WSResponse. Conversion to JSON will be marshalled by JacksonJSON Library
+ * Generic WSResponse Object.</br>
+ * This Object will be converted to JSON and served as a generic response from any WS in the REST Web Service API
+ * </br></br>
+ * Conversion to JSON will be marshalled by JacksonJSON Library
  * @author Jorge Morando
  */
 public class WSResponse implements Serializable{
@@ -21,8 +24,9 @@ public class WSResponse implements Serializable{
 	/**
 	 * @param success the success to set
 	 */
-	public void setSuccess(Boolean success) {
+	public WSResponse setSuccess(Boolean success) {
 		this.success = success;
+		return this;
 	}
 	/**
 	 * @return the message
@@ -33,7 +37,8 @@ public class WSResponse implements Serializable{
 	/**
 	 * @param message the message to set
 	 */
-	public void setMessage(String message) {
+	public WSResponse setMessage(String message) {
 		this.message = message;
+		return this;
 	}
 }

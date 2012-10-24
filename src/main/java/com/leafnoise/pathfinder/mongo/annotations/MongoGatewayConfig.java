@@ -8,7 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that  configures MongoGateway injected Object 
+ * Annotation that  configures MongoGateway injected Object.</br>
+ * Via this annotation a database and a collection can be configured directly into the injected MongoGateway Singleton object.
+ * @see com.leafnoise.pathfinder.mongo.MongoGateway
+ * @see com.leafnoise.pathfinder.mongo.annotations.MongoGatewaySingleton
  * @author Jorge Morando
  */
 @Retention(RUNTIME)

@@ -1,153 +1,75 @@
-Repo layout
-=========== 
-deployments/ - location for built wars (Details below)
-src/ - Maven src structure
-pom.xml - Maven build file  
-.openshift/ - location for openshift specific files
-.openshift/config/ - location for configuration files such as standalone.xml (used to modify jboss config such as datasources) 
-.openshift/action_hooks/pre_build - Script that gets run every git push before the build (on the CI system if available)
-.openshift/action_hooks/build - Script that gets run every git push as part of the build process (on the CI system if available)
-.openshift/action_hooks/deploy - Script that gets run every git push after build but before the app is restarted
-.openshift/action_hooks/post_deploy - Script that gets run every git push after the app is restarted
+================================================
+PATHFINDER - Aplicativo Interceptor de Eventos
+------------------------------------------------
+Pathfinder es un aplicativo inicialmente pensado para recibir instancias de eventos que suceden, almacenarlos y procesarlos aplicando una lógica todavía no establecida.
+Los eventos se reciben via una interfaz de servicios Web REST, y se almacenan en una base de datos NoSql para luego ser procesados. 
+Pueden consultarse los eventos mediante la misma interfaz de servicios WEB y generarse archivos de ontologías en base a las búsquedas realizadas para aplicar posterior lógica de procesamiento. 
 
-Notes about layout
-==================
-Note: Every time you push, everything in your remote repo dir gets recreated
-      please store long term items (like an sqlite database) in the OpenShift
-      data directory, which will persist between pushes of your repo.
-      The OpenShift data directory is accessible relative to the remote repo
-      directory (../data) or via an environment variable OPENSHIFT_DATA_DIR.
+================================================
+REQUISITOS PARA EJECUCION
+A continuación se indican los componentes necesarios para poder ejecutar la aplicación:
+------------------------------------------------
+	• JDK 1.6.x
+	• JBoss 7.1.0 
+	• Maven 3.0.4
+	• MongoDB
 
+================================================
+CONFIGURACION
+A continuación se detallan las configuraciones básicas para la correcta ejecución del aplicativo
+------------------------------------------------
+Renombrar el archivo standalone.xml por standalone-bkp.xml y standalone-full-ha.xml por standalone.xml.
+Ambos archivos se encuentran localizados en <JBOSS_DIRECTORY>/standalone/configuration
 
-Details about layout and deployment options
-==================
-There are two options for deploying content to the JBoss Application Server within OpenShift:
+================================================
+EJECUCION
+A continuación se detalla el caso básico de prueba establecido para la actual entrega
+------------------------------------------------
+Para enviar un evento al aplicativo se debe invocar mediante método HTTP-POST al servicio REST:
+	
+	http://localhost:8080/pathfinder/rest/send
 
-1) (Preferred) You can upload your content in a Maven src structure as is this sample project and on 
-git push have the application built and deployed.  For this to work you'll need your pom.xml at the 
-root of your repository and a maven-war-plugin like in this sample to move the output from the build
-to the deployments directory.  By default the warName is ROOT within pom.xml.  This will cause the 
-webapp contents to be rendered at http://app_name-namespace.rhcloud.com/.  If you change the warName in 
-pom.xml to app_name, your base url would then become http://app_name-namespace.rhcloud.com/app_name.
+Teniendo en cuenta lo siguiente: (sirve para todas las invocaciones a los servicios WEB):
+	a) http://localhost:8080 -> es el servidor y puerto en el que se encuentra levantado el aplicativo
+	b) /pathfinder -> es el contexto del aplicativo
+	c) /rest -> es la interfaz de servicios web
+	d) /send -> es el servicio invocado
+El servicio SEND consume un JSON con el siguiente formato:
 
-Note: If you are building locally you'll also want to add any output wars/ears under deployments 
-from the build to your .gitignore file.
+{"type":<LITERAL_STRING>,"agent":<LITERAL_STRING>,"product":<LITERAL_JSON_VALIDO>[,"time":<LITERAL_LONG>,"location":<LITERAL_STRING>,"parent":<LITERAL_STRING>,]}
 
-or
+Teniendo en cuenta lo siguiente:
 
-2) You can git push prebuilt wars (with the corresponding .dodeploy file for exploded wars) into deployments/.  To do this
-with the default repo you'll want to first run 'git rm -r src/ pom.xml' from the root of your repo.
-
-Basic workflows for deploying prebuilt content (each operation will require associated git add/commit/push operations to take effect):
-
-A) Add new zipped content and deploy it:
-
-1. cp target/example.war deployments/
-
-B) Add new unzipped content and deploy it:
-
-1. cp -r target/example.war/ deployments/
-2. touch deployments/example.war.dodeploy
-
-C) Undeploy currently deployed content:
-
-1. git rm deployments/example.war.dodeploy deployments/example.war
-
-D) Replace currently deployed zipped content with a new version and deploy it:
-
-1. cp target/example.war deployments/
-
-E) Replace currently deployed unzipped content with a new version and deploy it:
-
-1. git rm -rf deployments/example.war/
-2. cp -r target/example.war/ deployments/
-3. touch deployments/example.war.dodeploy
-
-WARNING:  If you go with option 2) there are a couple issues to keep in mind with both prebuilt and exploded 
-wars.  With exploded wars the main issue is with committing binaries (class and jar files) can make merge 
-conflicts tedious. With prebuilt wars the main issue is each time you modify the war and git push, it 
-takes up the size of the war file away from your OpenShift file system quota.  One alternative to this 
-(other then using Maven from option 1) is to use rsync to push your war into the deployments folder.  You 
-would have to do this after each git push followed by 'rhc app restart -a appname'.  Example:
-
-rsync -avz localdir/deployments/ app_uuid@appname-namespace.rhcloud.com:~/appname/repo/deployments/
-
-Note: You can get the information in the uri above from running 'rhc domain show'
-
-If you have already committed large files to your git repo, you rewrite or reset the history of those files in git
-to an earlier point in time and then 'git push --force' to apply those changes on the remote OpenShift server.  A 
-git gc on the remote OpenShift repo can be forced with (Note: tidy also does other cleanup including clearing log
-files and tmp dirs):
-
-rhc app tidy -a appname
+Los parámetros obligatorios son:
+	• type: define el tipo de evento que se está disparando, necesario para posterior diferenciación
+	• agent: el ente disparador o generador del evento
+	• product: <VALID_JSON> producto del evento variable a cada tipo de evento y de acuerdo con las ontologías que se declaren posteriormente 
+Los parámetros opcionales son:
+	• time: <LONG_NUMBER> timestamp java que define el momento en el que fue disparado (independientemente del momento en el que fue enviado al sistema), por defecto es el momento en el que el sistema recibe la instancia del evento
+	• location: <STRING> define una geolocaclización del evento -> (no implementado pero especificado por ontología de eventos utilizada)
+	• parent: <STRING> define el evento padrel -> (no implementado pero especificado por ontología de eventos utilizada)
+Los parámetros independientes agregados por el sistema
+	• received: <DATETIME> se crea automáticamente cuando se recive la instancia del evento, define el momento de recepción de la instancia.	  
 
 
-Whether you choose option 1) or 2) the end result will be the application 
-deployed into the deployments directory. The deployments directory in the 
-JBoss Application Server distribution is the location end users can place 
-their deployment content (e.g. war, ear, jar, sar files) to have it 
-automatically deployed into the server runtime.
+Ejemplo de mensaje mínimo para enviar un evento "SYSLOG" (falta definir ontología) pero se asume que tendrá un axioma que define un contenido de nombre "hasContent" de valor literal STRING y otro axioma de nombre "hasLevel" de valor literal STRING)
 
-The filesystem deployment scanner in AS 7 and later works differently from 
-previous JBoss AS releases. The scanner will no longer attempt to directly 
-monitor the deployment content and decide if or when the end user wishes 
-the content to be deployed. Instead, the scanner relies on a system of marker 
-files, with the user's addition or removal of a marker file serving as a sort
-of command telling the scanner to deploy, undeploy or redeploy content.
+{"type":"syslog","agent":"testCase","product":{"hasContent":"LOG CONTENT","hasLevel":"INFO"}}
 
-The marker files always have the same name as the deployment content to which
-they relate, but with an additional file suffix appended. For example, the 
-marker file to indicate the example.war should be deployed is named 
-example.war.dodeploy. Different marker file suffixes have different meanings.
+Para recuperar las instancias de los eventos se poseen 5 Servicios Web REST que deben ser invocados mediante método HTTP-GET:
 
-The relevant marker file types are:
+1)/receiveall(HttpServletRequest)
+	Busca todos los eventos recibidos de todos los tipos y todos los agentes
+2)/receive/agent/{agent}
+	Busca todos los eventos disparados por el agente
+3)/receive/type/{type}
+	Busca todos los eventos del tipo especificado
+4)/receive/typeandagent/{type}/{agent}
+	Busca todos los eventos del tipo especificado que hayan sido disparados por el agente especificado
+5)/receive/between/{timestamp1}/and/{timestamp2}
+	Busca todos los eventos de todos los tipos y agentes que se hayan sucedido entre las fechas especificadas
 
-.dodeploy     -- Placed by the user to indicate that the given content should 
-                 be deployed into the runtime (or redeployed if already 
-                 deployed in the runtime.)
-
-.deploying    -- Placed by the deployment scanner service to indicate that it 
-                 has noticed a .dodeploy file and is in the process of 
-                 deploying the content. This marker file will be deleted when 
-                 the deployment process completes.
-              
-.deployed     -- Placed by the deployment scanner service to indicate that the 
-                 given content has been deployed into the runtime. If an end 
-                 user deletes this file, the content will be undeployed.
-               
-.faileddeploy -- Placed by the deployment scanner service to indicate that the 
-                 given content failed to deploy into the runtime. The content 
-                 of the file will include some information about the cause of 
-                 the failure.
-
-.undeploying  -- Placed by the deployment scanner service to indicate that it 
-                 has noticed a .deployed file has been deleted and the 
-                 content is being undeployed. This marker file will be deleted 
-                 when the undeployment process completes.
-              
-.undeployed   -- Placed by the deployment scanner service to indicate that the 
-                 given content has been undeployed from the runtime. If an end 
-                 user deletes this file, it has no impact.
+Todos los servicios suministran una URL de un archivo de ontología .rdf generado por la consulta para procesamiento semántico.
+	
 
 
-Environment Variables
-=====================
-
-OpenShift provides several environment variables to reference for ease
-of use.  The following list are some common variables but far from exhaustive:
-
-    System.getenv("OPENSHIFT_GEAR_NAME")  - Application name
-    System.getenv("OPENSHIFT_GEAR_DIR")   - Application dir
-    System.getenv("OPENSHIFT_DATA_DIR")  - For persistent storage (between pushes)
-    System.getenv("OPENSHIFT_TMP_DIR")   - Temp storage (unmodified files deleted after 10 days)
-
-When embedding a database using 'rhc app cartridge add', you can reference environment
-variables for username, host and password:
-
-    System.getenv("OPENSHIFT_DB_HOST")      - DB host
-    System.getenv("OPENSHIFT_DB_PORT")      - DB Port
-    System.getenv("OPENSHIFT_DB_USERNAME")  - DB Username
-    System.getenv("OPENSHIFT_DB_PASSWORD")  - DB Password
-
-To get a full list of environment variables, simply add a line in your
-.openshift/action_hooks/build script that says "export" and push.

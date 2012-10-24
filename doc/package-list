@@ -1,0 +1,15 @@
+com.leafnoise.pathfinder.exceptions
+com.leafnoise.pathfinder.handlers
+com.leafnoise.pathfinder.handlers.jms
+com.leafnoise.pathfinder.handlers.jms.annotations
+com.leafnoise.pathfinder.handlers.owl
+com.leafnoise.pathfinder.mdb
+com.leafnoise.pathfinder.model
+com.leafnoise.pathfinder.mongo
+com.leafnoise.pathfinder.mongo.annotations
+com.leafnoise.pathfinder.mongo.exceptions
+com.leafnoise.pathfinder.service
+com.leafnoise.pathfinder.ws
+com.leafnoise.pathfinder.ws.artifacts
+com.leafnoise.pathfinder.ws.config
+com.leafnoise.pathfinder.ws.impl
