@@ -21,6 +21,7 @@
 		<resteasy.version>2.3.2.Final</resteasy.version>
 		<hornetq.version>2.2.11.Final</hornetq.version>
 		<primefaces.version>3.4.1</primefaces.version>
+		<maven.test.skip>true</maven.test.skip>
     </properties>
 	<dependencyManagement>
 		<dependencies>
@@ -318,6 +319,11 @@
              <version>2.0.0</version>
              <scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-distribution</artifactId>
+		<version>3.4.5</version>
+	</dependency>
 	</dependencies>
 
 	<build>
